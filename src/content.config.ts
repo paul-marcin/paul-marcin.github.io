@@ -10,6 +10,8 @@ const blog = defineCollection({
     heroImage: image().optional(), tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false), pin: z.boolean().optional(),
     language: z.string().optional(), comment: z.boolean().default(false),
+    // Domaine affiché en colonne sur l'accueil. Facultatif tant que les articles du starter n'en ont pas.
+    category: z.enum(['recherche', 'psychiatrie', 'politique']).optional(),
   }).transform(data => ({ ...data, publishDate: data.pubDate,
     heroImage: data.heroImage ? { src: data.heroImage, alt: data.title } : undefined,
   })),

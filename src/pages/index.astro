@@ -1,25 +1,140 @@
 ---
-import PageLayout from '@/layouts/BaseLayout.astro';
-import Section from '@/components/home/Section.astro';
-import { PostPreview } from 'astro-pure/components/pages';
-import { getBlogCollection, sortMDByDate } from 'astro-pure/server';
-import { Button } from 'astro-pure/user';
-const posts = sortMDByDate(await getBlogCollection());
+import PageLayout from '@/layouts/BaseLayout.astro'
+import StoryPreview from '@/components/home/StoryPreview.astro'
+import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
+
+const posts = sortMDByDate(await getBlogCollection())
+
+// Trois colonnes, deux aperçus chacune : les textes les plus récents de chaque domaine.
+// Les liens pointent vers /blog/ en attendant les pages Essays et Recherche.
+const columns = [
+  { category: 'recherche', title: 'Recherche', domain: 'Recherche', link: '/blog/', linkLabel: 'Explorer la recherche' },
+  { category: 'psychiatrie', title: 'Réflexions sur la psychiatrie', domain: 'Essai', link: '/blog/', linkLabel: 'Les essais sur la psychiatrie' },
+  { category: 'politique', title: 'Réflexions politiques', domain: 'Essai', link: '/blog/', linkLabel: 'Les essais politiques' }
+].map((column) => ({
+  ...column,
+  posts: posts.filter((post) => post.data.category === column.category).slice(0, 2)
+}))
 ---
-<PageLayout meta={{ title: 'Accueil' }} data-page="home">
-  <main class="flex w-full flex-col items-center">
-    <section class="animate mb-10 flex max-w-3xl flex-col gap-y-5" id="content-header">
-      <p class="text-sm text-muted-foreground">Recherche & réflexions</p>
-      <h1 class="text-3xl font-medium sm:text-4xl">Mieux vivre, avec soi-même et en société.</h1>
-      <p class="text-muted-foreground">Mes recherches et mes réflexions partent d’une même question : qu’est-ce qui nous aide à mieux vivre, avec nous-mêmes et avec les autres ?</p>
-      <p class="text-muted-foreground">J’explore cette question à travers les sciences cognitives, la psychiatrie, la politique et nos relations.</p>
+
+<PageLayout meta={{ title: 'Accueil' }} data-page='home'>
+  <main class='home'>
+    <section class='animate introduction' id='content-header' aria-labelledby='intro-title'>
+      <p class='eyebrow'>Un espace pour partager mes réflexions</p>
+      <h1 id='intro-title'>Mieux vivre, avec soi‑même<br />et en société.</h1>
+      <p class='intro-copy'>
+        Mes recherches et mes réflexions partent d’une même question : qu’est-ce qui nous aide à
+        mieux vivre, avec nous-mêmes et avec les autres ?
+      </p>
+      <p class='intro-copy secondary'>
+        J’explore cette question à travers les sciences cognitives, la psychiatrie, la politique et
+        nos relations. Je partage ici des travaux et des essais pour mieux comprendre nos
+        expériences et les conditions de notre vie collective.
+      </p>
     </section>
-    <div id="content" class="animate w-full flex flex-col gap-y-10 md:w-4/5 lg:w-5/6">
-      <Section title="Articles d’exemple">
-        <p class="text-muted-foreground">Les textes du starter sont conservés pour vérifier la base Pure. Ils ne constituent pas des publications personnelles.</p>
-        <ul class="flex flex-col gap-y-3">{posts.map(post => <PostPreview post={post} detailed />)}</ul>
-        <Button title="Tous les articles" href="/blog/" variant="ahead" class="w-fit self-end" />
-      </Section>
+
+    <div id='content' class='animate'>
+      <p class='section-heading'>Une sélection à travers trois domaines</p>
+      <div class='topic-columns'>
+        {
+          columns.map(({ category, title, domain, link, linkLabel, posts }) => (
+            <section class='topic-column' aria-labelledby={`${category}-heading`}>
+              <h2 id={`${category}-heading`}>{title}</h2>
+              {posts.map((post) => (
+                <StoryPreview {post} {domain} />
+              ))}
+              <a class='topic-link' href={link}>
+                {linkLabel} →
+              </a>
+            </section>
+          ))
+        }
+      </div>
     </div>
   </main>
 </PageLayout>
+
+<style>
+  .home {
+    padding-block: 2rem 3rem;
+  }
+  .introduction {
+    margin-bottom: 3rem;
+  }
+  .eyebrow,
+  .section-heading {
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    color: hsl(var(--muted-foreground));
+    margin: 0;
+  }
+  h1 {
+    font-size: clamp(2rem, 4.8vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin: 0.6rem 0 1.1rem;
+  }
+  .intro-copy {
+    max-width: 65ch;
+    line-height: 1.65;
+    margin: 0.6rem 0;
+  }
+  .secondary {
+    font-size: 0.95rem;
+    color: hsl(var(--muted-foreground));
+  }
+  .section-heading {
+    border-top: 1px solid hsl(var(--border));
+    padding: 1.3rem 0 1.6rem;
+  }
+
+  /* Colonnes alignées par une grille commune : tous les aperçus ont la hauteur du plus long. */
+  .topic-columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto repeat(2, 1fr) auto;
+    column-gap: 2rem;
+  }
+  .topic-column {
+    grid-row: 1 / -1;
+    display: grid;
+    grid-template-rows: subgrid;
+    row-gap: 1.7rem;
+    min-width: 0;
+  }
+  .topic-column > h2 {
+    align-self: end;
+    font-size: 1.2rem;
+    font-weight: 400;
+    border-bottom: 1px solid hsl(var(--foreground) / 0.5);
+    padding-bottom: 0.8rem;
+    margin: 0;
+  }
+  .topic-link {
+    grid-row: -2;
+    font-size: 0.85rem;
+    padding: 0.25rem 0;
+    color: hsl(var(--primary));
+  }
+  .topic-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 950px) {
+    .topic-columns {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: none;
+      row-gap: 2.5rem;
+    }
+    .topic-column {
+      grid-row: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .topic-column > h2 {
+      align-self: auto;
+    }
+  }
+</style>

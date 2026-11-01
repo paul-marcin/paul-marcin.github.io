@@ -1,0 +1,74 @@
+---
+// Aperçu d'article sur l'accueil : illustration, domaine, titre et résumé.
+import { Image } from 'astro:assets'
+import type { CollectionEntry } from 'astro:content'
+
+interface Props {
+  post: CollectionEntry<'blog'>
+  domain: string
+}
+
+const { post, domain } = Astro.props
+const { title, description, heroImage, tags } = post.data
+const theme = tags.find((tag) => tag !== 'exemple')
+---
+
+<article class='story'>
+  {
+    heroImage ? (
+      <Image class='story-image' src={heroImage.src} alt='' width={480} />
+    ) : (
+      <div class='story-image story-placeholder' aria-hidden='true'>
+        Illustration à venir
+      </div>
+    )
+  }
+  <p class='story-eyebrow'>{theme ? `${domain} · ${theme}` : domain}</p>
+  <h3><a href={`/blog/${post.id}/`}>{title}</a></h3>
+  <p class='story-summary'>{description}</p>
+</article>
+
+<style>
+  .story {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-bottom: 1px solid hsl(var(--border));
+    padding-bottom: 1.4rem;
+  }
+  .story-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border-radius: var(--radius);
+  }
+  .story-placeholder {
+    display: grid;
+    place-items: center;
+    background: hsl(var(--muted));
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--muted-foreground));
+    font-size: 0.75rem;
+  }
+  .story-eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: hsl(var(--muted-foreground));
+    margin: 0 0 0.5rem;
+  }
+  h3 {
+    font-size: 1.2rem;
+    line-height: 1.25;
+    margin: 0 0 0.7rem;
+  }
+  h3 a:hover {
+    color: hsl(var(--primary));
+  }
+  .story-summary {
+    font-size: 1rem;
+    line-height: 1.45;
+    color: hsl(var(--muted-foreground));
+    margin: 0;
+  }
+</style>
