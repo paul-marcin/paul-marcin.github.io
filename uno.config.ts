@@ -178,7 +178,12 @@ export default defineConfig({
   ],
   rules,
   theme: {
-    colors: themeColors
+    colors: themeColors,
+    // Polices définies dans src/assets/styles/design-tokens.css
+    fontFamily: {
+      sans: 'var(--font-ui)',
+      serif: 'var(--font-body)'
+    }
   },
   // https://unocss.dev/guide/extracting#limitations
   safelist: [

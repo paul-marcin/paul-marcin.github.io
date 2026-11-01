@@ -16,7 +16,8 @@ const fullTitle = `${title} · ${config.title}`;
 <link rel="icon" href={config.favicon.href} type={config.favicon.type} />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" type="application/rss+xml" title="Flux RSS" href="/rss.xml" />
-<Font cssVariable="--font-satoshi" preload={[{ subset: 'latin', style: 'normal' }]} />
+<Font cssVariable="--font-literata" preload={[{ subset: 'latin', style: 'normal' }]} />
+<Font cssVariable="--font-fraunces" />
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />
@@ -24,4 +25,3 @@ const fullTitle = `${title} · ${config.title}`;
 <meta property="og:image" content={new URL(ogImage || config.socialCard, Astro.site)} />
 <meta property="og:locale" content={config.locale.attrs} />
 <meta name="color-scheme" content="light dark" />
-<style is:global>body { font-family: var(--font-satoshi), sans-serif; }</style>

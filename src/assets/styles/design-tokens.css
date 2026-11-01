@@ -1,0 +1,62 @@
+/*
+ * Réglages de design centralisés.
+ * Modifier les valeurs ici plutôt que dans les composants.
+ * Les variantes [data-typo] servent à l'atelier de comparaison (sélecteur visible en local seulement).
+ */
+
+/* [Typographie] — choix du 1er novembre 2026 */
+:root {
+  /* Texte et interface (menus, dates, métadonnées) : Literata */
+  --font-body: var(--font-literata), Georgia, serif;
+  --font-ui: var(--font-body);
+  /* Titres : Fraunces */
+  --font-heading: var(--font-fraunces), Georgia, serif;
+
+  /* Lecture des articles : réglage validé sur le prototype (18 px, interligne 1,5) */
+  --reading-size: 1.125rem;
+  --reading-leading: 1.5;
+}
+
+/* [Couleurs] — mode clair. Valeurs HSL (teinte saturation% luminosité%), comme dans app.css.
+ * Fond et texte : palette « Papier », choisie le 1er novembre 2026.
+ * Contraste texte/fond 16,4:1, texte secondaire/fond 9,3:1 (WCAG AA : 4,5:1). */
+:root:not(.dark) {
+  --background: 40 33% 97%;
+  --foreground: 30 15% 10%;
+  --muted-foreground: 30 8% 26%;
+  --muted: 38 25% 92%;
+  --card: 36 18% 87%;
+  --border: 35 18% 84%;
+}
+
+/* Accent (liens, survol, éléments actifs) : terracotta, choisie le 1er novembre 2026.
+ * Contraste sur le fond Papier : 5,2:1 (WCAG AA : 4,5:1). */
+:root:not(.dark) {
+  --primary: 16 58% 42%;
+}
+
+/* Fond uniforme de l'accueil, sans halo : terracotta pâle #F4E7E1, choisi le 1er novembre 2026.
+ * Texte 14,4:1, secondaire 8,2:1 ; accent foncé 6,7:1 pour rester distinct du fond. */
+:root:not(.dark) body[data-page='home'] {
+  --background: 18 45% 92%;
+  --muted: 18 38% 88%;
+  --card: 18 30% 83%;
+  --border: 18 30% 82%;
+  --primary: 16 62% 32%;
+}
+
+/* [Application] */
+body {
+  font-family: var(--font-ui);
+}
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+}
+:root .prose {
+  font-family: var(--font-body);
+  font-size: var(--reading-size);
+  line-height: var(--reading-leading);
+}

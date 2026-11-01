@@ -6,7 +6,7 @@ import { getBlogCollection, sortMDByDate } from 'astro-pure/server';
 import { Button } from 'astro-pure/user';
 const posts = sortMDByDate(await getBlogCollection());
 ---
-<PageLayout meta={{ title: 'Accueil' }} highlightColor="#659EB9">
+<PageLayout meta={{ title: 'Accueil' }} data-page="home">
   <main class="flex w-full flex-col items-center">
     <section class="animate mb-10 flex max-w-3xl flex-col gap-y-5" id="content-header">
       <p class="text-sm text-muted-foreground">Recherche & réflexions</p>

@@ -1,0 +1,94 @@
+---
+// Atelier de design : sélecteur de variantes, pour comparer des réglages sur les vraies pages.
+// Pour l'utiliser : ajouter `{import.meta.env.DEV && <DesignWorkshop />}` à la fin du <body> de BaseLayout,
+// définir les variantes ci-dessous et les règles :root[data-home='…'] correspondantes dans design-tokens.css.
+
+const variants = [
+  { id: 'papier', label: 'Papier (comme les articles)' },
+  { id: 'pale', label: 'Terracotta pâle' },
+  { id: 'moyenne', label: 'Terracotta moyenne' },
+  { id: 'pleine', label: 'Terracotta pleine' }
+]
+---
+
+<design-workshop>
+  <details>
+    <summary>Atelier</summary>
+    <fieldset>
+      <legend>Fond de l'accueil</legend>
+      {variants.map(({ id, label }) => (
+        <label>
+          <input type='radio' name='home' value={id} />
+          {label}
+        </label>
+      ))}
+    </fieldset>
+  </details>
+</design-workshop>
+
+<script>
+  const KEY = 'design-workshop-home'
+
+  function apply(value: string) {
+    if (value === 'papier') delete document.documentElement.dataset.home
+    else document.documentElement.dataset.home = value
+  }
+
+  class DesignWorkshop extends HTMLElement {
+    connectedCallback() {
+      let saved = 'papier'
+      try {
+        saved = localStorage.getItem(KEY) ?? 'papier'
+      } catch {}
+      apply(saved)
+      this.querySelectorAll<HTMLInputElement>('input[name="home"]').forEach((input) => {
+        input.checked = input.value === saved
+        input.addEventListener('change', () => {
+          apply(input.value)
+          try {
+            localStorage.setItem(KEY, input.value)
+          } catch {}
+        })
+      })
+    }
+  }
+  customElements.define('design-workshop', DesignWorkshop)
+</script>
+
+<style>
+  design-workshop {
+    position: fixed;
+    inset-inline-end: 1rem;
+    inset-block-end: 1rem;
+    z-index: 100;
+    font-family: system-ui, sans-serif;
+    font-size: 0.875rem;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    padding: 0.5rem 0.75rem;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
+  }
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+  fieldset {
+    border: 0;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.25rem;
+  }
+  legend {
+    color: hsl(var(--muted-foreground));
+    margin-bottom: 0.25rem;
+  }
+  label {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    cursor: pointer;
+  }
+</style>
