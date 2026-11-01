@@ -1,13 +1,13 @@
 ---
 // Atelier de design : sélecteur de variantes, pour comparer des réglages sur les vraies pages.
 // Pour l'utiliser : ajouter `{import.meta.env.DEV && <DesignWorkshop />}` à la fin du <body> de BaseLayout,
-// définir les variantes ci-dessous et les règles :root[data-home='…'] correspondantes dans design-tokens.css.
+// définir les variantes ci-dessous et les règles :root[data-…='…'] correspondantes dans design-tokens.css.
 
 const variants = [
-  { id: 'papier', label: 'Papier (comme les articles)' },
-  { id: 'pale', label: 'Terracotta pâle' },
-  { id: 'moyenne', label: 'Terracotta moyenne' },
-  { id: 'pleine', label: 'Terracotta pleine' }
+  { id: 'pure', label: 'Pure (actuel)' },
+  { id: 'charbon', label: 'Charbon' },
+  { id: 'brun', label: 'Brun' },
+  { id: 'terre', label: 'Terre' }
 ]
 ---
 
@@ -15,10 +15,10 @@ const variants = [
   <details>
     <summary>Atelier</summary>
     <fieldset>
-      <legend>Fond de l'accueil</legend>
+      <legend>Mode sombre (activer avec le bouton de l'en-tête)</legend>
       {variants.map(({ id, label }) => (
         <label>
-          <input type='radio' name='home' value={id} />
+          <input type='radio' name='dark' value={id} />
           {label}
         </label>
       ))}
@@ -27,21 +27,21 @@ const variants = [
 </design-workshop>
 
 <script>
-  const KEY = 'design-workshop-home'
+  const KEY = 'design-workshop-dark'
 
   function apply(value: string) {
-    if (value === 'papier') delete document.documentElement.dataset.home
-    else document.documentElement.dataset.home = value
+    if (value === 'pure') delete document.documentElement.dataset.dark
+    else document.documentElement.dataset.dark = value
   }
 
   class DesignWorkshop extends HTMLElement {
     connectedCallback() {
-      let saved = 'papier'
+      let saved = 'pure'
       try {
-        saved = localStorage.getItem(KEY) ?? 'papier'
+        saved = localStorage.getItem(KEY) ?? 'pure'
       } catch {}
       apply(saved)
-      this.querySelectorAll<HTMLInputElement>('input[name="home"]').forEach((input) => {
+      this.querySelectorAll<HTMLInputElement>('input[name="dark"]').forEach((input) => {
         input.checked = input.value === saved
         input.addEventListener('change', () => {
           apply(input.value)

@@ -15,12 +15,12 @@ Les valeurs sont centralisées dans `src/assets/styles/design-tokens.css`. L'ate
 | 1er nov. 2026 | Couleur d'accent | Terracotta #A94E2D | Choisie parmi bleu Pure, terracotta, vert sapin, bleu encre et prune. Contraste 5,2:1 sur Papier. Le bleu de Pure (4,2:1) était sous le seuil AA. |
 | 1er nov. 2026 | Halo en haut de l'accueil | Supprimé | L'auteur veut un fond d'accueil uniforme, comme chez Maggie Appleton. |
 | 1er nov. 2026 | Fond de l'accueil | Terracotta pâle #F4E7E1, uniforme ; accent foncé #843A1F sur l'accueil | Choisi parmi Papier, terracotta pâle, moyenne et pleine. Les articles gardent le fond Papier : transition d'un accueil chaleureux vers une lecture plus discrète. |
+| 1er nov. 2026 | Mode sombre | « Charbon » : fond #1B1A18, texte crème, accent terracotta éclaircie #E19270 ; accueil #24201E | Choisi parmi Pure, charbon, brun et terre : sobre, presque neutre. Contrastes ≥ 6,6:1. |
 
 ## En cours d'exploration
 
-Rien pour l'instant. L'atelier (`src/components/DesignWorkshop.astro`) est débranché ; voir son commentaire pour le réactiver.
+Rien. L'atelier (`src/components/DesignWorkshop.astro`) est débranché ; voir son commentaire pour le réactiver.
 
 ## À explorer ensuite
 
 - Largeur de lecture : la colonne d'article de Pure fait déjà environ 760 px sur grand écran, comme le prototype. À confirmer à l'œil.
-- Mode sombre.
