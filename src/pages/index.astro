@@ -1,59 +1,25 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import PageLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/home/Section.astro';
+import { PostPreview } from 'astro-pure/components/pages';
+import { getBlogCollection, sortMDByDate } from 'astro-pure/server';
+import { Button } from 'astro-pure/user';
+const posts = sortMDByDate(await getBlogCollection());
 ---
-
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to
-				build a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your{' '}
-				<code>astro.config.mjs</code> file. You can customize your setup with{' '}
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like
-				Tailwind, React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>
-					Edit this page in <code>src/pages/index.astro</code>
-				</li>
-				<li>
-					Edit the site header items in <code>src/components/Header.astro</code>
-				</li>
-				<li>
-					Add your name to the footer in <code>src/components/Footer.astro</code>
-				</li>
-				<li>
-					Check out the included blog posts in <code>src/content/blog/</code>
-				</li>
-				<li>
-					Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code>
-				</li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to{' '}
-				<a href="https://docs.astro.build/">read the docs</a> or{' '}
-				<a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out{' '}
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a> by{' '}
-				<a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+<PageLayout meta={{ title: 'Accueil' }} highlightColor="#659EB9">
+  <main class="flex w-full flex-col items-center">
+    <section class="animate mb-10 flex max-w-3xl flex-col gap-y-5" id="content-header">
+      <p class="text-sm text-muted-foreground">Recherche & réflexions</p>
+      <h1 class="text-3xl font-medium sm:text-4xl">Mieux vivre, avec soi-même et en société.</h1>
+      <p class="text-muted-foreground">Mes recherches et mes réflexions partent d’une même question : qu’est-ce qui nous aide à mieux vivre, avec nous-mêmes et avec les autres ?</p>
+      <p class="text-muted-foreground">J’explore cette question à travers les sciences cognitives, la psychiatrie, la politique et nos relations.</p>
+    </section>
+    <div id="content" class="animate w-full flex flex-col gap-y-10 md:w-4/5 lg:w-5/6">
+      <Section title="Articles d’exemple">
+        <p class="text-muted-foreground">Les textes du starter sont conservés pour vérifier la base Pure. Ils ne constituent pas des publications personnelles.</p>
+        <ul class="flex flex-col gap-y-3">{posts.map(post => <PostPreview post={post} detailed />)}</ul>
+        <Button title="Tous les articles" href="/blog/" variant="ahead" class="w-fit self-end" />
+      </Section>
+    </div>
+  </main>
+</PageLayout>

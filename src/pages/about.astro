@@ -1,14 +1,10 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
-import Layout from '../layouts/BlogPost.astro';
+
+import Layout from '../layouts/ContentLayout.astro';
 ---
 
-<Layout
-	title="About Me"
-	description="Lorem ipsum dolor sit amet"
-	pubDate={new Date('August 08 2021')}
-	heroImage={AboutHeroImage}
->
+<Layout meta={{ title: 'À propos — exemple conservé' }} back='/'>
+<Fragment slot='header'><h1 class='text-3xl font-medium'>À propos</h1><p class='mt-3 text-muted-foreground'>Texte de démonstration conservé du starter, à remplacer par ta présentation.</p></Fragment>
 	<p>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
 		labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo

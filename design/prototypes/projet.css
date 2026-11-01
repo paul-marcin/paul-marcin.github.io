@@ -1,0 +1,15 @@
+.project-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; border-block: 1px solid #bbb; padding: 1.1rem 0; margin: 1.8rem 0 1rem; }
+.project-facts dt { font: .7rem/1.5 system-ui, sans-serif; color: #555; margin-bottom: .35rem; }
+.project-facts dd { margin: 0; font-size: .9rem; line-height: 1.5; }
+.project-shortcuts { gap: .4rem 1.3rem; }
+.project-question { border-left: 2px solid #777; padding: .8rem 1.2rem; margin: 1.5rem 0; background: #eaeaea; }
+.project-question p { margin-bottom: 0; }
+.method-steps { padding-left: 1.4rem; }
+.method-steps li { padding-left: .5rem; margin-bottom: 1.3rem; }
+.reading-copy h3 { font-size: 1.1rem; font-weight: normal; margin: .5rem 0; line-height: 1.4; }
+.project-status div, .resource-list div { border-top: 1px solid #c4c4c4; padding: 1rem 0; }
+.project-status dt, .resource-list dt { font-weight: bold; margin-bottom: .4rem; }
+.project-status dd, .resource-list dd { margin: 0; }
+.related-essay { border-block: 1px solid #bbb; padding: 1rem 0; margin: 1.3rem 0; }
+.related-essay p:last-child { margin-bottom: 0; }
+@media (max-width: 600px) { .project-facts { grid-template-columns: minmax(0, 1fr); gap: .9rem; } }

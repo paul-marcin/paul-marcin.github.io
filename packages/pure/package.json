@@ -1,0 +1,61 @@
+{
+  "name": "astro-pure",
+  "type": "module",
+  "description": "A simple, clean but powerful blog theme build by astro.",
+  "version": "1.4.9-astro7.0",
+  "homepage": "https://astro-pure.js.org/",
+  "author": "CWorld",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cworld1/astro-theme-pure.git",
+    "directory": "packages/pure"
+  },
+  "bugs": "https://github.com/cworld1/astro-theme-pure",
+  "keywords": [
+    "astro-component",
+    "withastro",
+    "css",
+    "ui",
+    "renderer"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "astro-pure": "scripts/index.js"
+  },
+  "exports": {
+    ".": "./index.ts",
+    "./user": "./components/user/index.ts",
+    "./advanced": "./components/advanced/index.ts",
+    "./components/pages": "./components/pages/index.ts",
+    "./components/basic": "./components/basic/index.ts",
+    "./utils": "./utils/index.ts",
+    "./server": "./utils/server.ts",
+    "./types": "./types/index.ts",
+    "./libs": "./libs/index.ts"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "^7.3.4",
+    "@pagefind/default-ui": "^1.5.2",
+    "@unocss/astro": "^66.10.5",
+    "@unocss/reset": "^66.10.5",
+    "hast-util-select": "^6.0.4",
+    "hastscript": "^9.0.3",
+    "is-absolute-url": "^5.0.0",
+    "node-html-parser": "^7.1.0",
+    "pagefind": "^1.5.2",
+    "rehype": "^13.0.2",
+    "ultrahtml": "^1.7.0",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.2.0",
+    "unocss": "^66.10.5",
+    "vfile": "^6.0.3"
+  },
+  "peerDependencies": {
+    "astro": "^7.4.4",
+    "@astrojs/mdx": "^8.1.2",
+    "@astrojs/sitemap": "^3.7.4"
+  }
+}
