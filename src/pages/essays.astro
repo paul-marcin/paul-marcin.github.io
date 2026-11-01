@@ -1,0 +1,53 @@
+---
+import PageLayout from '@/layouts/BaseLayout.astro'
+import PageIntro from '@/components/home/PageIntro.astro'
+import StoryGrid from '@/components/home/StoryGrid.astro'
+import { categories, postsIn } from '@/utils/categories'
+import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
+
+const posts = sortMDByDate(await getBlogCollection())
+---
+
+<PageLayout meta={{ title: 'Essays', description: 'Réflexions sur la psychiatrie, la politique et nos relations.' }}>
+  <main>
+    <PageIntro
+      eyebrow='L’espace des réflexions personnelles'
+      title='Essays'
+      navLabel='Thèmes des essais'
+      links={[
+        { label: 'Psychiatrie', href: '#psychiatrie' },
+        { label: 'Politique et relations', href: '#politique' }
+      ]}
+    >
+      <p>
+        Psychiatrie, politique et relations : des textes aboutis pour partager des réflexions et
+        ouvrir la discussion.
+      </p>
+    </PageIntro>
+
+    <div id='content' class='animate'>
+      <section class='essay-section' id='psychiatrie' aria-labelledby='psychiatrie-title'>
+        <h2 id='psychiatrie-title'>{categories.psychiatrie.title}</h2>
+        <StoryGrid posts={postsIn(posts, 'psychiatrie')} />
+      </section>
+      <section class='essay-section' id='politique' aria-labelledby='politique-title'>
+        <h2 id='politique-title'>Réflexions politiques et relationnelles</h2>
+        <StoryGrid posts={postsIn(posts, 'politique')} />
+      </section>
+    </div>
+  </main>
+</PageLayout>
+
+<style>
+  .essay-section {
+    margin-bottom: 3.5rem;
+    scroll-margin-top: 6rem;
+  }
+  h2 {
+    font-size: 1.45rem;
+    font-weight: 400;
+    border-top: 1px solid hsl(var(--border));
+    padding-top: 1.3rem;
+    margin: 0 0 1.6rem;
+  }
+</style>

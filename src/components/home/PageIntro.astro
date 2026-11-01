@@ -1,0 +1,63 @@
+---
+// En-tête des pages de section (Essays, Recherche) : surtitre, titre, présentation et sommaire d'ancres.
+interface Props {
+  eyebrow: string
+  title: string
+  links?: { label: string; href: string }[]
+  navLabel?: string
+}
+
+const { eyebrow, title, links = [], navLabel = 'Rubriques' } = Astro.props
+---
+
+<section class='animate page-intro' id='content-header'>
+  <p class='eyebrow'>{eyebrow}</p>
+  <h1>{title}</h1>
+  <div class='lead'><slot /></div>
+  {
+    links.length > 0 && (
+      <nav aria-label={navLabel}>
+        {links.map(({ label, href }) => (
+          <a {href}>{label}</a>
+        ))}
+      </nav>
+    )
+  }
+</section>
+
+<style>
+  .page-intro {
+    padding-top: 2rem;
+    margin-bottom: 3rem;
+  }
+  .eyebrow {
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    color: hsl(var(--muted-foreground));
+    margin: 0;
+  }
+  h1 {
+    font-size: clamp(2rem, 4.8vw, 3rem);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin: 0.6rem 0 1rem;
+  }
+  .lead {
+    max-width: 65ch;
+    line-height: 1.65;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+  }
+  nav a {
+    color: hsl(var(--primary));
+  }
+  nav a:hover {
+    text-decoration: underline;
+  }
+</style>

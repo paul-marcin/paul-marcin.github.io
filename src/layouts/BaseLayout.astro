@@ -29,12 +29,13 @@ const {
   </head>
 
   <body class='flex justify-center bg-background text-foreground' {...props}>
+    {/* Halo : fondu depuis la couleur du fond de l'accueil (design-tokens.css) */}
     {
       highlightColor && (
         <div
           id='highlight-gradient'
-          class='pointer-events-none absolute start-0 top-0 z-0 h-screen w-full opacity-25'
-          style={`background-image:linear-gradient(${highlightColor},transparent)`}
+          class='pointer-events-none absolute start-0 top-0 z-0 h-screen w-full'
+          style='background-image:linear-gradient(hsl(var(--home-background)),transparent)'
         />
       )
     }

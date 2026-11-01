@@ -2,14 +2,15 @@
 // Aperçu d'article sur l'accueil : illustration, domaine, titre et résumé.
 import { Image } from 'astro:assets'
 import type { CollectionEntry } from 'astro:content'
+import { categories } from '@/utils/categories'
 
 interface Props {
   post: CollectionEntry<'blog'>
-  domain: string
 }
 
-const { post, domain } = Astro.props
-const { title, description, heroImage, tags } = post.data
+const { post } = Astro.props
+const { title, description, heroImage, tags, category } = post.data
+const domain = category ? categories[category].domain : 'Article'
 const theme = tags.find((tag) => tag !== 'exemple')
 ---
 

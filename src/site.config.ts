@@ -7,7 +7,7 @@ export const theme: ThemeUserConfig = {
   logo: { src: '/src/assets/blog-placeholder-about.jpg', alt: 'Image de démonstration' },
   locale: { lang: 'fr', attrs: 'fr_FR', dateLocale: 'fr-FR', dateOptions: { day: 'numeric', month: 'short', year: 'numeric' } },
   titleDelimiter: '·', prerender: true,
-  header: { menu: [{ title: 'Articles', link: '/blog/' }, { title: 'À propos', link: '/about/' }] },
+  header: { menu: [{ title: 'Essays', link: '/essays/' }, { title: 'Recherche', link: '/recherche/' }, { title: 'À propos', link: '/about/' }] },
   footer: { year: `© ${new Date().getFullYear()} `, credits: true, social: [{ icon: 'rss', label: 'Flux RSS', href: '/rss.xml' }] },
   content: { externalLinks: { content: ' ↗' }, blogPageSize: 8, share: [], imageCaption: true },
 };

@@ -1,19 +1,16 @@
 ---
 import PageLayout from '@/layouts/BaseLayout.astro'
 import StoryPreview from '@/components/home/StoryPreview.astro'
+import { categories, postsIn, type Category } from '@/utils/categories'
 import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
 
 const posts = sortMDByDate(await getBlogCollection())
 
 // Trois colonnes, deux aperçus chacune : les textes les plus récents de chaque domaine.
-// Les liens pointent vers /blog/ en attendant les pages Essays et Recherche.
-const columns = [
-  { category: 'recherche', title: 'Recherche', domain: 'Recherche', link: '/blog/', linkLabel: 'Explorer la recherche' },
-  { category: 'psychiatrie', title: 'Réflexions sur la psychiatrie', domain: 'Essai', link: '/blog/', linkLabel: 'Les essais sur la psychiatrie' },
-  { category: 'politique', title: 'Réflexions politiques', domain: 'Essai', link: '/blog/', linkLabel: 'Les essais politiques' }
-].map((column) => ({
-  ...column,
-  posts: posts.filter((post) => post.data.category === column.category).slice(0, 2)
+const columns = (['recherche', 'psychiatrie', 'politique'] as Category[]).map((category) => ({
+  category,
+  ...categories[category],
+  posts: postsIn(posts, category).slice(0, 2)
 }))
 ---
 
@@ -37,13 +34,13 @@ const columns = [
       <p class='section-heading'>Une sélection à travers trois domaines</p>
       <div class='topic-columns'>
         {
-          columns.map(({ category, title, domain, link, linkLabel, posts }) => (
+          columns.map(({ category, title, page, linkLabel, posts }) => (
             <section class='topic-column' aria-labelledby={`${category}-heading`}>
               <h2 id={`${category}-heading`}>{title}</h2>
               {posts.map((post) => (
-                <StoryPreview {post} {domain} />
+                <StoryPreview {post} />
               ))}
-              <a class='topic-link' href={link}>
+              <a class='topic-link' href={page}>
                 {linkLabel} →
               </a>
             </section>

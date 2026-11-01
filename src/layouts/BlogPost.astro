@@ -10,6 +10,7 @@ import { ArticleBottom, Copyright, Hero, TOC } from 'astro-pure/components/pages
 import PageLayout from '@/layouts/ContentLayout.astro'
 
 import config from 'virtual:config'
+import { categories } from '@/utils/categories'
 
 interface Props {
   post: CollectionEntry<'blog'>
@@ -32,7 +33,8 @@ const {
   title,
   updatedDate,
   draft: isDraft,
-  comment: enableComment
+  comment: enableComment,
+  category
 } = data
 
 const socialImage = heroImage
@@ -47,7 +49,7 @@ const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-tex
 <PageLayout
   meta={{ articleDate, description, ogImage: socialImage, title }}
   highlightColor={primaryColor}
-  back='/blog'
+  back={category ? categories[category].page : '/blog/'}
 >
   {!!headings.length && <TOC {headings} slot='sidebar' />}
 

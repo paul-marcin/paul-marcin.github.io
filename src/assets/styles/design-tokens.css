@@ -37,8 +37,12 @@
 
 /* Fond uniforme de l'accueil, sans halo : terracotta pâle #F4E7E1, choisi le 1er novembre 2026.
  * Texte 14,4:1, secondaire 8,2:1 ; accent foncé 6,7:1 pour rester distinct du fond. */
+:root:not(.dark) {
+  /* Aussi utilisé pour le halo en haut des articles (BaseLayout) */
+  --home-background: 18 45% 92%;
+}
 :root:not(.dark) body[data-page='home'] {
-  --background: 18 45% 92%;
+  --background: var(--home-background);
   --muted: 18 38% 88%;
   --card: 18 30% 83%;
   --border: 18 30% 82%;
@@ -57,8 +61,11 @@
   --border: 30 5% 21%;
   --primary: 18 65% 66%;
 }
+:root.dark {
+  --home-background: 18 10% 13%;
+}
 :root.dark body[data-page='home'] {
-  --background: 18 10% 13%;
+  --background: var(--home-background);
 }
 
 /* [Application] */

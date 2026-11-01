@@ -1,0 +1,42 @@
+---
+// Grille d'aperçus sur deux colonnes : toutes les lignes prennent la hauteur de l'aperçu le plus long.
+import type { CollectionEntry } from 'astro:content'
+import StoryPreview from './StoryPreview.astro'
+
+interface Props {
+  posts: CollectionEntry<'blog'>[]
+}
+
+const { posts } = Astro.props
+---
+
+{
+  posts.length > 0 ? (
+    <div class='stories'>
+      {posts.map((post) => (
+        <StoryPreview {post} />
+      ))}
+    </div>
+  ) : (
+    <p class='empty'>Aucun texte publié pour l'instant.</p>
+  )
+}
+
+<style>
+  .stories {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 2.3rem 2.5rem;
+  }
+  .empty {
+    color: hsl(var(--muted-foreground));
+    font-style: italic;
+  }
+  @media (max-width: 700px) {
+    .stories {
+      grid-template-columns: minmax(0, 1fr);
+      grid-auto-rows: auto;
+    }
+  }
+</style>

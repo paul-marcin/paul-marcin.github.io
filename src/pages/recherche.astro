@@ -1,0 +1,78 @@
+---
+import PageLayout from '@/layouts/BaseLayout.astro'
+import PageIntro from '@/components/home/PageIntro.astro'
+import StoryGrid from '@/components/home/StoryGrid.astro'
+import { postsIn } from '@/utils/categories'
+import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
+
+const posts = postsIn(sortMDByDate(await getBlogCollection()), 'recherche')
+---
+
+<PageLayout meta={{ title: 'Recherche', description: 'Sciences cognitives computationnelles, intelligence artificielle et modèles de l’humeur.' }}>
+  <main>
+    <PageIntro
+      eyebrow='L’espace académique'
+      title='Recherche'
+      links={[
+        { label: 'Intérêts', href: '#interets' },
+        { label: 'Articles', href: '#articles' },
+        { label: 'Publications', href: '#publications' },
+        { label: 'Travaux en cours', href: '#travaux' },
+        { label: 'CV', href: '#cv' }
+      ]}
+    >
+      <p>Sciences cognitives computationnelles, intelligence artificielle et modèles de l’humeur.</p>
+    </PageIntro>
+
+    <div id='content' class='animate'>
+      <section class='academic-section' id='interets'>
+        <h2>Intérêts de recherche</h2>
+        <p>Psychiatrie, cognition et modélisation de l’humeur.</p>
+        <p class='to-do'>À compléter : questions de recherche précises.</p>
+      </section>
+
+      <section class='academic-section' id='articles'>
+        <h2>Articles de recherche</h2>
+        <StoryGrid {posts} />
+      </section>
+
+      <section class='academic-section' id='publications'>
+        <h2>Publications</h2>
+        <p class='to-do'>À compléter à partir de ta liste de publications.</p>
+      </section>
+
+      <section class='academic-section' id='travaux'>
+        <h2>Travaux en cours</h2>
+        <p class='to-do'>À compléter : les pages projet seront ajoutées à l’étape suivante.</p>
+      </section>
+
+      <section class='academic-section' id='cv'>
+        <h2>CV</h2>
+        <p class='to-do'>À compléter : parcours et CV à télécharger.</p>
+      </section>
+    </div>
+  </main>
+</PageLayout>
+
+<style>
+  .academic-section {
+    border-top: 1px solid hsl(var(--border));
+    padding: 1.3rem 0 2.5rem;
+    scroll-margin-top: 6rem;
+  }
+  h2 {
+    font-size: 1.45rem;
+    font-weight: 400;
+    margin: 0 0 1.2rem;
+  }
+  .academic-section > p {
+    max-width: 70ch;
+    line-height: 1.6;
+    margin: 0 0 0.5rem;
+  }
+  .to-do {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: hsl(var(--muted-foreground));
+  }
+</style>
