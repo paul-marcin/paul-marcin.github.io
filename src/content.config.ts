@@ -1,4 +1,4 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 const blog = defineCollection({
@@ -16,4 +16,19 @@ const blog = defineCollection({
     heroImage: data.heroImage ? { src: data.heroImage, alt: data.title } : undefined,
   })),
 });
-export const collections = { blog };
+// Pages projet de l'espace Recherche : synthèse en tête, sections en Markdown/MDX.
+const projects = defineCollection({
+  loader: glob({ base: './src/content/projects', pattern: '**/*.{md,mdx}' }),
+  schema: z.object({
+    title: z.string(), description: z.string(),
+    pubDate: z.coerce.date(), updatedDate: z.coerce.date().optional(),
+    // Repères affichés sous le titre (domaine, approche, statut…)
+    facts: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
+    // Accès rapides vers des sections du projet (ancres des titres)
+    shortcuts: z.array(z.object({ label: z.string(), href: z.string() })).default([]),
+    // Articles qui expliquent le projet, affichés en fin de page
+    related: z.array(reference('blog')).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+export const collections = { blog, projects };

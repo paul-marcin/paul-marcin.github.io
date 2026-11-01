@@ -6,6 +6,7 @@ import { postsIn } from '@/utils/categories'
 import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
 
 const posts = postsIn(sortMDByDate(await getBlogCollection()), 'recherche')
+const projects = sortMDByDate(await getBlogCollection('projects'))
 ---
 
 <PageLayout meta={{ title: 'Recherche', description: 'Sciences cognitives computationnelles, intelligence artificielle et modèles de l’humeur.' }}>
@@ -43,7 +44,22 @@ const posts = postsIn(sortMDByDate(await getBlogCollection()), 'recherche')
 
       <section class='academic-section' id='travaux'>
         <h2>Travaux en cours</h2>
-        <p class='to-do'>À compléter : les pages projet seront ajoutées à l’étape suivante.</p>
+        {
+          projects.length > 0 ? (
+            <ul class='projects'>
+              {projects.map((project) => (
+                <li>
+                  <h3>
+                    <a href={`/recherche/projets/${project.id}/`}>{project.data.title} →</a>
+                  </h3>
+                  <p>{project.data.description}</p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class='to-do'>Aucun projet présenté pour l’instant.</p>
+          )
+        }
       </section>
 
       <section class='academic-section' id='cv'>
@@ -69,6 +85,24 @@ const posts = postsIn(sortMDByDate(await getBlogCollection()), 'recherche')
     max-width: 70ch;
     line-height: 1.6;
     margin: 0 0 0.5rem;
+  }
+  .projects {
+    display: grid;
+    gap: 1.5rem;
+    max-width: 70ch;
+  }
+  .projects h3 {
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin: 0 0 0.4rem;
+  }
+  .projects h3 a:hover {
+    color: hsl(var(--primary));
+  }
+  .projects p {
+    color: hsl(var(--muted-foreground));
+    line-height: 1.5;
+    margin: 0;
   }
   .to-do {
     font-size: 0.85rem;

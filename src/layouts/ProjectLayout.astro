@@ -1,0 +1,152 @@
+---
+// Page projet : synthèse (question, repères, accès rapides) puis sections du projet, avec sommaire latéral.
+import type { MarkdownHeading } from 'astro'
+import { type CollectionEntry, getEntries } from 'astro:content'
+import { TOC } from 'astro-pure/components/pages'
+import StoryPreview from '@/components/home/StoryPreview.astro'
+import PageLayout from '@/layouts/ContentLayout.astro'
+
+interface Props {
+  project: CollectionEntry<'projects'>
+  headings: MarkdownHeading[]
+}
+
+const { project, headings } = Astro.props
+const { title, description, facts, shortcuts, related, updatedDate, pubDate } = project.data
+const relatedPosts = (await getEntries(related)).filter((post) => !post.data.draft)
+---
+
+<PageLayout
+  meta={{ title, description, articleDate: (updatedDate ?? pubDate).toISOString() }}
+  highlightColor='hsl(var(--primary))'
+  back='/recherche/#travaux'
+>
+  {!!headings.length && <TOC {headings} slot='sidebar' />}
+
+  <header slot='header' class='project-heading'>
+    <p class='eyebrow'><a href='/recherche/#travaux'>Recherche · Projets</a></p>
+    <h1>{title}</h1>
+    <p class='standfirst'>{description}</p>
+    {
+      facts.length > 0 && (
+        <dl class='project-facts'>
+          {facts.map(({ label, value }) => (
+            <div>
+              <dt>{label}</dt>
+              <dd>{value}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+    {
+      shortcuts.length > 0 && (
+        <nav class='project-shortcuts' aria-label='Accès rapide'>
+          {shortcuts.map(({ label, href }) => (
+            <a {href}>{label} ↓</a>
+          ))}
+        </nav>
+      )
+    }
+  </header>
+
+  <slot />
+
+  <Fragment slot='bottom'>
+    {
+      relatedPosts.length > 0 && (
+        <section class='related' aria-labelledby='related-title'>
+          <h2 id='related-title'>Pour comprendre le sujet</h2>
+          <div class='related-list'>
+            {relatedPosts.map((post) => (
+              <StoryPreview {post} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+    <a class='back-link' href='/recherche/#travaux'>← Retour aux travaux de recherche</a>
+  </Fragment>
+</PageLayout>
+
+<style>
+  .eyebrow {
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    color: hsl(var(--muted-foreground));
+    margin: 0;
+  }
+  .eyebrow a:hover {
+    color: hsl(var(--primary));
+  }
+  h1 {
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    font-weight: 400;
+    line-height: 1.15;
+    margin: 0.6rem 0 1rem;
+  }
+  .standfirst {
+    font-size: 1.15rem;
+    line-height: 1.55;
+    color: hsl(var(--muted-foreground));
+    margin: 0;
+  }
+  .project-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.2rem;
+    border-block: 1px solid hsl(var(--border));
+    padding: 1.1rem 0;
+    margin: 1.8rem 0 1rem;
+  }
+  .project-facts dt {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: hsl(var(--muted-foreground));
+    margin-bottom: 0.35rem;
+  }
+  .project-facts dd {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .project-shortcuts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.3rem;
+    font-size: 0.9rem;
+  }
+  .project-shortcuts a {
+    color: hsl(var(--primary));
+  }
+  .project-shortcuts a:hover,
+  .back-link:hover {
+    text-decoration: underline;
+  }
+  .related {
+    margin-bottom: 2rem;
+  }
+  .related h2 {
+    font-size: 1.45rem;
+    font-weight: 400;
+    color: hsl(var(--foreground));
+    border-top: 1px solid hsl(var(--border));
+    padding-top: 1.3rem;
+    margin: 0 0 1.3rem;
+  }
+  .related-list {
+    display: grid;
+    gap: 2rem;
+    max-width: 30rem;
+  }
+  .back-link {
+    font-size: 0.9rem;
+    color: hsl(var(--primary));
+  }
+  @media (max-width: 600px) {
+    .project-facts {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.9rem;
+    }
+  }
+</style>
