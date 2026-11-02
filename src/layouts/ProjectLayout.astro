@@ -5,6 +5,9 @@ import { type CollectionEntry, getEntries } from 'astro:content'
 import { TOC } from 'astro-pure/components/pages'
 import StoryPreview from '@/components/home/StoryPreview.astro'
 import PageLayout from '@/layouts/ContentLayout.astro'
+import { localPath, choose } from '@/utils/i18n'
+import { visible } from '@/utils/content'
+import TranslationNotice from '@/components/TranslationNotice.astro'
 
 interface Props {
   project: CollectionEntry<'projects'>
@@ -13,18 +16,20 @@ interface Props {
 
 const { project, headings } = Astro.props
 const { title, description, facts, shortcuts, related, updatedDate, pubDate } = project.data
-const relatedPosts = (await getEntries(related)).filter((post) => !post.data.draft)
+const locale = project.data.locale
+const researchPath = localPath('/recherche/#travaux', locale)
+const relatedPosts = (await getEntries(related)).filter((post) => visible(post) && post.data.locale === locale)
 ---
 
 <PageLayout
   meta={{ title, description, articleDate: (updatedDate ?? pubDate).toISOString() }}
   highlightColor='hsl(var(--primary))'
-  back='/recherche/#travaux'
+  back={researchPath}
 >
   {!!headings.length && <TOC {headings} slot='sidebar' />}
 
   <header slot='header' class='project-heading'>
-    <p class='eyebrow'><a href='/recherche/#travaux'>Recherche · Projets</a></p>
+    <p class='eyebrow'><a href={researchPath}>{choose(locale, 'Recherche · Projets', 'Research · Projects')}</a></p>
     <h1>{title}</h1>
     <p class='standfirst'>{description}</p>
     {
@@ -41,7 +46,7 @@ const relatedPosts = (await getEntries(related)).filter((post) => !post.data.dra
     }
     {
       shortcuts.length > 0 && (
-        <nav class='project-shortcuts' aria-label='Accès rapide'>
+        <nav class='project-shortcuts' aria-label={choose(locale, 'Accès rapide', 'Quick links')}>
           {shortcuts.map(({ label, href }) => (
             <a {href}>{label} ↓</a>
           ))}
@@ -50,13 +55,14 @@ const relatedPosts = (await getEntries(related)).filter((post) => !post.data.dra
     }
   </header>
 
+  <TranslationNotice entry={project} />
   <slot />
 
   <Fragment slot='bottom'>
     {
       relatedPosts.length > 0 && (
         <section class='related' aria-labelledby='related-title'>
-          <h2 id='related-title'>Pour comprendre le sujet</h2>
+          <h2 id='related-title'>{choose(locale, 'Pour comprendre le sujet', 'Understanding the topic')}</h2>
           <div class='related-list'>
             {relatedPosts.map((post) => (
               <StoryPreview {post} />
@@ -65,7 +71,7 @@ const relatedPosts = (await getEntries(related)).filter((post) => !post.data.dra
         </section>
       )
     }
-    <a class='back-link' href='/recherche/#travaux'>← Retour aux travaux de recherche</a>
+    <a class='back-link' href={researchPath}>← {choose(locale, 'Retour aux travaux de recherche', 'Back to research projects')}</a>
   </Fragment>
 </PageLayout>
 

@@ -86,7 +86,8 @@ const typographyConfig: TypographyOptions = {
       'border-inline-start-color': 'inherit',
       'border-radius': `calc(1.5 * ${radius})`,
       'padding-inline': '1.6rem',
-      'box-shadow': `0 5px 0 ${bgMuted}`,
+      // Transparent shadow: darkens the actual backdrop, including gradients.
+      'box-shadow': '0 5px 0 rgb(0 0 0 / 0.08)',
       ...(typographyCustom.blockquoteStyle === 'normal' && { 'font-style': 'normal' })
     },
     'blockquote::after': {

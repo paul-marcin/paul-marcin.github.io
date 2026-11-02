@@ -12,7 +12,7 @@ interface Props {
   comment?: boolean
 }
 
-const { title, headings, view, comment: enableComment, ...props } = Astro.props
+const { title, headings, view: _view, comment: _comment, ...props } = Astro.props
 ---
 
 <PageLayout meta={{ title }} {...props}>
@@ -20,7 +20,6 @@ const { title, headings, view, comment: enableComment, ...props } = Astro.props
 
   <Fragment slot='header'>
     <h1 class='text-2xl font-medium sm:mb-2 sm:text-3xl'>{title}</h1>
-    {view && <PageInfo comment={enableComment} class='italic' />}
   </Fragment>
 
   <slot />

@@ -1,5 +1,7 @@
 ---
 import '@pagefind/default-ui/css/ui.css'
+import { localeFromPath, choose } from '@/utils/i18n'
+const locale = localeFromPath(Astro.url.pathname)
 ---
 
 <site-search>
@@ -7,7 +9,7 @@ import '@pagefind/default-ui/css/ui.css'
     {
       import.meta.env.DEV ? (
         <div class='w-full rounded-xl border-2 bg-transparent px-4 py-2 pe-3 outline-none focus:border-foreground'>
-          You are in Dev mode, the search is disabled.
+          {choose(locale, 'La recherche est disponible dans la version compilée du site.', 'Search is available in the built version of the site.')}
         </div>
       ) : (
         <div id='site-search' />

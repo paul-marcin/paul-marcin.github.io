@@ -2,7 +2,7 @@
 import { Footer, Header, ThemeProvider } from 'astro-pure/components/basic'
 import type { SiteMeta } from 'astro-pure/types'
 import BaseHead from '@/components/BaseHead.astro'
-import config from '@/site-config'
+import { localeFromPath, siteDescription } from '@/utils/i18n'
 
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseLayout /> component.
@@ -16,26 +16,27 @@ interface Props {
 }
 
 const {
-  meta: { articleDate, description = config.description, ogImage, title },
+  meta: { articleDate, description, ogImage, title },
   highlightColor,
   ...props
 } = Astro.props
+const locale = localeFromPath(Astro.url.pathname)
 ---
 
-<html lang={config.locale.lang}>
+<html lang={locale}>
   <head>
-    <BaseHead {articleDate} {description} {ogImage} {title} />
+    <BaseHead {articleDate} description={description ?? siteDescription(locale)} {ogImage} {title} />
     <ThemeProvider />
   </head>
 
   <body class='flex justify-center bg-background text-foreground' {...props}>
-    {/* Halo : fondu depuis la couleur du fond de l'accueil (design-tokens.css) */}
+    {/* Halo : couleur de lecture dédiée (design-tokens.css) */}
     {
       highlightColor && (
         <div
           id='highlight-gradient'
-          class='pointer-events-none absolute start-0 top-0 z-0 h-screen w-full'
-          style='background-image:linear-gradient(hsl(var(--home-background)),transparent)'
+          class='pointer-events-none absolute start-0 top-0 z-0 w-full'
+          style='height:var(--article-halo-height, 0px);background-image:linear-gradient(hsl(var(--article-halo)),transparent)'
         />
       )
     }
@@ -91,3 +92,29 @@ const {
     </style>
   </body>
 </html>
+
+<script>
+  const halo = document.getElementById('highlight-gradient')
+  const heading = document.getElementById('content-header')
+  const container = document.getElementById('main-container')
+
+  if (halo && heading && container) {
+    const updateHalo = () => {
+      // Layout coordinates ignore the entrance animation's visual translation.
+      let bottom = heading.offsetHeight
+      let element: HTMLElement | null = heading
+      while (element) {
+        bottom += element.offsetTop
+        element = element.offsetParent as HTMLElement | null
+      }
+      halo.style.setProperty('--article-halo-height', `${bottom}px`)
+    }
+
+    const observer = new ResizeObserver(updateHalo)
+    observer.observe(heading)
+    observer.observe(container)
+    window.addEventListener('resize', updateHalo)
+    document.fonts.ready.then(updateHalo)
+    updateHalo()
+  }
+</script>

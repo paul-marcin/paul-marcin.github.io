@@ -1,10 +1,10 @@
 ---
 import { type CollectionEntry, render } from 'astro:content'
-import { getBlogCollection } from 'astro-pure/server'
 import ProjectLayout from '@/layouts/ProjectLayout.astro'
+import { localizedContent } from '@/utils/content'
 
 export async function getStaticPaths() {
-  const projects = await getBlogCollection('projects')
+  const projects = await localizedContent('projects', 'fr')
   return projects.map((project) => ({ params: { slug: project.id }, props: project }))
 }
 

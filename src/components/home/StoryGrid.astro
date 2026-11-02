@@ -2,6 +2,7 @@
 // Grille d'aperçus sur deux colonnes : toutes les lignes prennent la hauteur de l'aperçu le plus long.
 import type { CollectionEntry } from 'astro:content'
 import StoryPreview from './StoryPreview.astro'
+import { choose, localeFromPath } from '@/utils/i18n'
 
 interface Props {
   posts: CollectionEntry<'blog'>[]
@@ -18,7 +19,7 @@ const { posts } = Astro.props
       ))}
     </div>
   ) : (
-    <p class='empty'>Aucun texte publié pour l'instant.</p>
+    <p class='empty'>{choose(localeFromPath(Astro.url.pathname), 'Aucun texte publié pour l’instant.', 'No essays published in English yet.')}</p>
   )
 }
 

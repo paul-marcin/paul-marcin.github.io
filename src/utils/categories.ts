@@ -1,4 +1,5 @@
 import type { CollectionEntry } from 'astro:content'
+import { choose, type Locale } from './i18n'
 
 export type Category = NonNullable<CollectionEntry<'blog'>['data']['category']>
 
@@ -29,4 +30,13 @@ export const categories: Record<
 
 export function postsIn(posts: CollectionEntry<'blog'>[], category: Category) {
   return posts.filter((post) => post.data.category === category)
+}
+
+export function categoryLabels(category: Category, locale: Locale) {
+  const english = {
+    recherche: { title: 'Research', domain: 'Research', linkLabel: 'Explore the research' },
+    psychiatrie: { title: 'Reflections on psychiatry', domain: 'Essay', linkLabel: 'Essays on psychiatry' },
+    politique: { title: 'Political reflections', domain: 'Essay', linkLabel: 'Political essays' }
+  }
+  return { ...categories[category], ...choose(locale, categories[category], english[category]) }
 }

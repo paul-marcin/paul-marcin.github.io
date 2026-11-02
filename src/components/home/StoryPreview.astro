@@ -2,7 +2,8 @@
 // Aperçu d'article sur l'accueil : illustration, domaine, titre et résumé.
 import { Image } from 'astro:assets'
 import type { CollectionEntry } from 'astro:content'
-import { categories } from '@/utils/categories'
+import { categoryLabels } from '@/utils/categories'
+import { entryPath, choose } from '@/utils/i18n'
 
 interface Props {
   post: CollectionEntry<'blog'>
@@ -10,8 +11,9 @@ interface Props {
 
 const { post } = Astro.props
 const { title, description, heroImage, tags, category } = post.data
-const domain = category ? categories[category].domain : 'Article'
-const theme = tags.find((tag) => tag !== 'exemple')
+const locale = post.data.locale
+const domain = category ? categoryLabels(category, locale).domain : 'Article'
+const theme = tags.find((tag) => !['exemple', 'example'].includes(tag))
 ---
 
 <article class='story'>
@@ -20,12 +22,12 @@ const theme = tags.find((tag) => tag !== 'exemple')
       <Image class='story-image' src={heroImage.src} alt='' width={480} />
     ) : (
       <div class='story-image story-placeholder' aria-hidden='true'>
-        Illustration à venir
+        {choose(locale, 'Illustration à venir', 'Illustration to come')}
       </div>
     )
   }
   <p class='story-eyebrow'>{theme ? `${domain} · ${theme}` : domain}</p>
-  <h3><a href={`/blog/${post.id}/`}>{title}</a></h3>
+  <h3><a href={entryPath('blog', post.id, locale)}>{title}</a></h3>
   <p class='story-summary'>{description}</p>
 </article>
 

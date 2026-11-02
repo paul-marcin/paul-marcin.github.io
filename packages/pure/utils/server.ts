@@ -17,7 +17,7 @@ export async function getBlogCollection<T extends CollectionKey = 'blog'>(
 function getYearFromCollection<T extends CollectionKey>(
   collection: CollectionEntry<T>
 ): number | undefined {
-  const dateStr = collection.data.updatedDate ?? collection.data.publishDate
+  const dateStr = collection.data.updatedDate ?? collection.data.pubDate
   return dateStr ? new Date(dateStr).getFullYear() : undefined
 }
 export function groupCollectionsByYear<T extends CollectionKey>(
@@ -39,9 +39,9 @@ export function groupCollectionsByYear<T extends CollectionKey>(
   ).sort((a, b) => b[0] - a[0])
 }
 
-export function sortMDByDate<T extends CollectionKey>(
-  collections: CollectionEntry<T>[]
-): CollectionEntry<T>[] {
+export function sortMDByDate<T extends CollectionEntry<CollectionKey>>(
+  collections: T[]
+): T[] {
   return collections.sort((a, b) => {
     const aPin = 'pin' in a.data && a.data.pin === true
     const bPin = 'pin' in b.data && b.data.pin === true
@@ -49,15 +49,15 @@ export function sortMDByDate<T extends CollectionKey>(
       return Number(bPin) - Number(aPin)
     }
 
-    const aDate = new Date(a.data.publishDate ?? 0).valueOf()
-    const bDate = new Date(b.data.publishDate ?? 0).valueOf()
+    const aDate = new Date(a.data.pubDate ?? 0).valueOf()
+    const bDate = new Date(b.data.pubDate ?? 0).valueOf()
     return bDate - aDate
   })
 }
 
 /** Note: This function doesn't filter draft posts, pass it the result of getAllPosts above to do so. */
 export function getAllTags(collections: Collections) {
-  return collections.flatMap((collection) => [...collection.data.tags])
+  return collections.flatMap((collection) => 'tags' in collection.data ? [...collection.data.tags] : [])
 }
 
 /** Note: This function doesn't filter draft posts, pass it the result of getAllPosts above to do so. */

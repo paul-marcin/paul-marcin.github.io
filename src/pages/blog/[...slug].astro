@@ -1,9 +1,10 @@
 ---
-import { type CollectionEntry, getCollection, render } from 'astro:content';
+import { type CollectionEntry, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
+import { localizedContent } from '@/utils/content';
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
+	const posts = await localizedContent('blog', 'fr');
 	return posts.map((post) => ({
 		params: { slug: post.id },
 		props: post,
@@ -13,7 +14,7 @@ type Props = CollectionEntry<'blog'>;
 
 const post = Astro.props;
 const { Content, headings, remarkPluginFrontmatter } = await render(post);
-const posts = (await getCollection('blog')).sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+const posts = (await localizedContent('blog', 'fr')).sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
 ---
 
 <BlogPost {post} {posts} {headings} {remarkPluginFrontmatter}>

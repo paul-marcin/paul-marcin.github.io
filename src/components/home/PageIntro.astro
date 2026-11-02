@@ -6,8 +6,9 @@ interface Props {
   links?: { label: string; href: string }[]
   navLabel?: string
 }
+import { choose, localeFromPath } from '@/utils/i18n'
 
-const { eyebrow, title, links = [], navLabel = 'Rubriques' } = Astro.props
+const { eyebrow, title, links = [], navLabel = choose(localeFromPath(Astro.url.pathname), 'Rubriques', 'Sections') } = Astro.props
 ---
 
 <section class='animate page-intro' id='content-header'>

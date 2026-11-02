@@ -1,0 +1,16 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { reviewState } from '@/utils/content'
+const { entry } = Astro.props as { entry: CollectionEntry<'blog' | 'projects'> }
+const state = entry.data.locale === 'en' ? reviewState(entry) : 'reviewed'
+const message = state === 'outdated'
+  ? 'The French source has changed. This translation needs updating and review.'
+  : state === 'edited'
+    ? 'This translation has been edited since its last approval and needs review.'
+    : 'English translation — draft for review.'
+---
+{import.meta.env.DEV && state !== 'reviewed' && (
+  <aside class='my-5 rounded-xl border bg-muted px-4 py-3 text-sm text-muted-foreground' data-pagefind-ignore>
+    {message}
+  </aside>
+)}

@@ -3,6 +3,7 @@ import type { MarkdownHeading } from 'astro'
 
 import { generateToc } from '../../plugins/toc'
 import TOCHeading from './TOCHeading.astro'
+import { choose, localeFromPath } from '@/utils/i18n'
 
 interface Props {
   headings: MarkdownHeading[]
@@ -16,7 +17,7 @@ const toc = generateToc(headings)
 ---
 
 <toc-heading class={className} {...props}>
-  <h2 class='font-medium'>TABLE OF CONTENTS</h2>
+  <h2 class='font-medium'>{choose(localeFromPath(Astro.url.pathname), 'SOMMAIRE', 'TABLE OF CONTENTS')}</h2>
   <ul class='mt-4'>
     {toc.map((heading) => <TOCHeading heading={heading} />)}
   </ul>

@@ -10,7 +10,9 @@ import { ArticleBottom, Copyright, Hero, TOC } from 'astro-pure/components/pages
 import PageLayout from '@/layouts/ContentLayout.astro'
 
 import config from 'virtual:config'
-import { categories } from '@/utils/categories'
+import { categoryLabels } from '@/utils/categories'
+import { localPath } from '@/utils/i18n'
+import TranslationNotice from '@/components/TranslationNotice.astro'
 
 interface Props {
   post: CollectionEntry<'blog'>
@@ -32,8 +34,6 @@ const {
   publishDate,
   title,
   updatedDate,
-  draft: isDraft,
-  comment: enableComment,
   category
 } = data
 
@@ -43,13 +43,13 @@ const socialImage = heroImage
     : heroImage.src.src
   : config.socialCard
 const articleDate = updatedDate?.toISOString() ?? publishDate.toISOString()
-const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-text-opacity))'
+const primaryColor = 'hsl(var(--primary))'
 ---
 
 <PageLayout
   meta={{ articleDate, description, ogImage: socialImage, title }}
   highlightColor={primaryColor}
-  back={category ? categories[category].page : '/blog/'}
+  back={localPath(category ? categoryLabels(category, data.locale).page : '/blog/', data.locale)}
 >
   {!!headings.length && <TOC {headings} slot='sidebar' />}
 
@@ -59,6 +59,7 @@ const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-tex
     </Fragment>
   </Hero>
 
+  <TranslationNotice entry={{ collection: 'blog', id, data } as CollectionEntry<'blog'>} />
   <slot />
 
   <Fragment slot='bottom'>

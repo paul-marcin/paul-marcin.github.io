@@ -1,7 +1,15 @@
 ---
 import config from 'virtual:config'
+import LanguageSwitcher from '@/components/LanguageSwitcher.astro'
+import { localeFromPath, localPath, choose } from '@/utils/i18n'
 
 import { Icon } from '../user'
+const locale = localeFromPath(Astro.url.pathname)
+const menu = [
+  { title: 'Essays', link: '/essays/' },
+  { title: choose(locale, 'Recherche', 'Research'), link: '/recherche/' },
+  { title: choose(locale, 'À propos', 'About'), link: '/about/' }
+]
 ---
 
 <header-component
@@ -10,7 +18,7 @@ import { Icon } from '../user'
   <a
     class='z-30 text-xl font-medium group-[.not-top]:ms-2 sm:group-[.not-top]:ms-3'
     style='transition:margin-inline 0.3s'
-    href='/'
+    href={localPath('/', locale)}
     aria-label='Brand'>{config.title}</a
   >
 
@@ -22,11 +30,10 @@ import { Icon } from '../user'
     >
       <div class='flex flex-col items-center justify-center overflow-hidden sm:flex-row'>
         {
-          config.header.menu.map((item) => (
+          menu.map((item) => (
             <a
-              href={item.link}
+              href={localPath(item.link, locale)}
               class='w-full flex-none grow py-2 text-right font-medium transition-none hover:text-primary sm:w-fit sm:px-3'
-              aria-label='Nav menu item'
               data-astro-prefetch
             >
               {item.title}
@@ -34,8 +41,8 @@ import { Icon } from '../user'
           ))
         }
         <div class='flex w-full grow flex-row justify-end gap-x-3 sm:w-fit sm:gap-x-5'>
-          <a class='px-1 py-2 transition-none sm:px-2' href='/search' title='Search'>
-            <span class='sr-only'>Search</span>
+          <a class='px-1 py-2 transition-none sm:px-2' href={localPath('/search/', locale)} title={choose(locale, 'Rechercher', 'Search')}>
+            <span class='sr-only'>{choose(locale, 'Rechercher', 'Search')}</span>
             <Icon name='search' class='size-5' />
           </a>
         </div>
@@ -44,11 +51,12 @@ import { Icon } from '../user'
 
     {/* buttons */}
     <div class='z-30 flex gap-x-4 group-[.not-top]:gap-x-2' style='transition:gap 0.3s'>
+      <LanguageSwitcher />
       <button
         id='toggleDarkMode'
         class='group/dark box-content size-5 rounded-md border p-1.5 transition-colors hover:bg-border sm:group-[.not-top]:rounded-xl'
       >
-        <span class='sr-only'>Dark Theme</span>
+        <span class='sr-only'>{choose(locale, 'Changer de thème', 'Change theme')}</span>
         <Icon class='system size-5 group-hover/dark:text-primary' name='computer' />
         <Icon class='light hidden size-5 group-hover/dark:text-primary' name='sun' />
         <Icon class='dark hidden size-5 group-hover/dark:text-primary' name='moon' />

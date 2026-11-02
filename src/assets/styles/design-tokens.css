@@ -21,7 +21,9 @@
  * Fond et texte : palette « Papier », choisie le 1er novembre 2026.
  * Contraste texte/fond 16,4:1, texte secondaire/fond 9,3:1 (WCAG AA : 4,5:1). */
 :root:not(.dark) {
-  --background: 40 33% 97%;
+  --paper-background: 40 33% 97%;
+  --background: var(--paper-background);
+  --reading-background: 40 20% 99%;
   --foreground: 30 15% 10%;
   --muted-foreground: 30 8% 26%;
   --muted: 38 25% 92%;
@@ -35,18 +37,17 @@
   --primary: 16 58% 42%;
 }
 
-/* Fond uniforme de l'accueil, sans halo : terracotta pâle #F4E7E1, choisi le 1er novembre 2026.
- * Texte 14,4:1, secondaire 8,2:1 ; accent foncé 6,7:1 pour rester distinct du fond. */
+/* L'accueil et le halo reprennent le fond Papier des pages Essays et Recherche.
+ * Le fond de lecture est un blanc légèrement chaud, plus clair. */
 :root:not(.dark) {
-  /* Aussi utilisé pour le halo en haut des articles (BaseLayout) */
-  --home-background: 18 45% 92%;
+  --home-background: var(--paper-background);
+  --article-halo: var(--paper-background);
 }
 :root:not(.dark) body[data-page='home'] {
   --background: var(--home-background);
-  --muted: 18 38% 88%;
-  --card: 18 30% 83%;
-  --border: 18 30% 82%;
-  --primary: 16 62% 32%;
+}
+:root:not(.dark) body[data-page='reading'] {
+  --background: var(--reading-background);
 }
 
 /* [Mode sombre] — « Charbon », choisi le 1er novembre 2026 (remplace les couleurs sombres de Pure).
@@ -63,6 +64,7 @@
 }
 :root.dark {
   --home-background: 18 10% 13%;
+  --article-halo: var(--home-background);
 }
 :root.dark body[data-page='home'] {
   --background: var(--home-background);

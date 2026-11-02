@@ -1,11 +1,4 @@
 ---
-import PageLayout from '@/layouts/BaseLayout.astro';
-import { PostPreview } from 'astro-pure/components/pages';
-import { getBlogCollection, sortMDByDate } from 'astro-pure/server';
-const posts = sortMDByDate(await getBlogCollection());
+import View from '../../views/BlogIndex.astro'
 ---
-<PageLayout meta={{ title: 'Articles' }}>
-  <main><h1 class="mb-4 text-3xl font-medium">Articles</h1><p class="mb-8 text-muted-foreground">Textes d’exemple conservés pendant l’intégration de Pure.</p>
-    <ul class="flex flex-col gap-y-5">{posts.map(post => <PostPreview post={post} detailed />)}</ul>
-  </main>
-</PageLayout>
+<View />

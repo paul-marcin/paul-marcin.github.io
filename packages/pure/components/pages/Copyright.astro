@@ -1,19 +1,21 @@
 ---
-import type { CollectionKey, InferEntrySchema } from 'astro:content'
+import type { InferEntrySchema } from 'astro:content'
 
 import config from 'virtual:config'
 
-import { cn, getFormattedDate } from '../../utils'
+import { cn } from '../../utils'
 import { QRCode } from '../advanced'
 import { Icon } from '../user'
+import { localeFromPath, choose } from '@/utils/i18n'
 
-interface Props<T extends CollectionKey> {
-  data: InferEntrySchema<T>
+interface Props {
+  data: InferEntrySchema<'blog'>
   class?: string
 }
 
 const { data, class: className } = Astro.props
 const { title, publishDate } = data
+const locale = localeFromPath(Astro.url.pathname)
 const heroImage = 'heroImage' in data ? data.heroImage : undefined
 
 const image = typeof heroImage?.src === 'string' ? heroImage?.src : (heroImage?.src?.src ?? '')
@@ -48,17 +50,17 @@ const shares = {
   {/* common info */}
   <div class='flex flex-row flex-wrap justify-start gap-x-5 gap-y-1 sm:gap-x-8'>
     <div class='flex gap-x-2 sm:flex-col'>
-      <span>Author</span>
+      <span>{choose(locale, 'Auteur', 'Author')}</span>
       <span class='text-sm text-foreground max-sm:place-self-center'>{config.author}</span>
     </div>
     {
       publishDate && (
         <div class='flex gap-x-2 sm:min-w-16 sm:flex-col'>
-          <span>Published at</span>
+          <span>{choose(locale, 'Publié le', 'Published on')}</span>
           <span class='text-sm text-foreground max-sm:place-self-center'>
-            {getFormattedDate(publishDate, {
-              month: 'long'
-            })}
+            {new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'fr-FR', {
+              day: 'numeric', month: 'long', year: 'numeric'
+            }).format(publishDate)}
           </span>
         </div>
       )
@@ -80,14 +82,14 @@ const shares = {
     <div class='flex flex-row gap-3'>
       <button
         id='copy-link'
-        aria-label='Copy link'
+        aria-label={choose(locale, 'Copier le lien', 'Copy link')}
         class='group rounded-full bg-muted p-1 text-muted-foreground transition-colors hover:text-primary sm:p-1.5'
       >
         <Icon class='size-5' name='link' />
       </button>
       <button
         id='get-qrcode'
-        aria-label='Get QR code'
+        aria-label={choose(locale, 'Afficher le code QR', 'Show QR code')}
         class='group rounded-full bg-muted p-1 text-muted-foreground transition-colors hover:text-primary sm:p-1.5'
       >
         <Icon class='size-5' name='qrcode' />
@@ -118,7 +120,7 @@ const shares = {
     class='flex items-center justify-between text-muted-foreground no-underline'
     target='_blank'
   >
-    <span>Buy me a cup of coffee ☕.</span>
+    <span>{choose(locale, 'Offrez-moi un café ☕.', 'Buy me a cup of coffee ☕.')}</span>
     <Icon class='box-content size-5 p-1' name='receive-money' />
   </a>
 </div>

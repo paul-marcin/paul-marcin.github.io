@@ -1,7 +1,8 @@
 ---
 import type { HTMLAttributes } from 'astro/types'
 
-import { cn, getFormattedDate } from '../../utils'
+import { cn } from '../../utils'
+import { localeFromPath } from '@/utils/i18n'
 
 type Props = HTMLAttributes<'time'> & {
   date: Date
@@ -11,7 +12,9 @@ type Props = HTMLAttributes<'time'> & {
 
 const { date, dateTimeOptions, class: className, ...attrs } = Astro.props
 
-const postDate = getFormattedDate(date, dateTimeOptions)
+const postDate = new Intl.DateTimeFormat(localeFromPath(Astro.url.pathname) === 'en' ? 'en-GB' : 'fr-FR', {
+  day: 'numeric', month: 'short', year: 'numeric', ...dateTimeOptions
+}).format(date)
 ---
 
 <span class={cn('text-muted-foreground font-mono', className)} {...attrs}>

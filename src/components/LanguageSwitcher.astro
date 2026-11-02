@@ -1,0 +1,26 @@
+---
+import { languageLinks } from '@/utils/content'
+import { localeFromPath, choose } from '@/utils/i18n'
+const locale = localeFromPath(Astro.url.pathname)
+const links = await languageLinks(Astro.url.pathname)
+const target = links.find((link) => link.locale !== locale)
+---
+<nav aria-label={choose(locale, 'Langue', 'Language')} class='language-switcher'>
+  {target ? (
+    <a href={target.href} lang={target.locale} hreflang={target.locale}
+      aria-label={target.locale === 'en' ? 'Read in English' : 'Lire en français'}>
+      {target.locale.toUpperCase()}
+    </a>
+  ) : (
+    <span aria-disabled='true' title={choose(locale, 'Traduction anglaise pas encore disponible', 'French translation not available yet')}>
+      {locale === 'fr' ? 'EN' : 'FR'}
+    </span>
+  )}
+</nav>
+<style>
+  .language-switcher { display: flex; align-items: center; font-size: 0.8rem; }
+  a { padding: 0.375rem; border-radius: var(--radius); }
+  a:hover { color: hsl(var(--primary)); background: hsl(var(--muted)); }
+  a:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; }
+  span { opacity: 0.45; padding: 0.375rem; }
+</style>

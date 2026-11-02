@@ -1,16 +1,8 @@
-import { getCollection } from 'astro:content';
-import rss from '@astrojs/rss';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-
+import rss from '@astrojs/rss'
+import { localizedContent } from '../utils/content'
+import { entryPath, siteDescription } from '../utils/i18n'
 export async function GET(context) {
-	const posts = await getCollection('blog');
-	return rss({
-		title: SITE_TITLE,
-		description: SITE_DESCRIPTION,
-		site: context.site,
-		items: posts.map((post) => ({
-			...post.data,
-			link: `/blog/${post.id}/`,
-		})),
-	});
+ const posts = await localizedContent('blog', 'fr')
+ return rss({ title: 'Paul — Articles', description: siteDescription('fr'), site: context.site,
+ items: posts.map(post => ({ ...post.data, link: entryPath('blog', post.id, 'fr') })), customData: '<language>fr</language>' })
 }

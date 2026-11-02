@@ -8,6 +8,7 @@ import rehypeKatex from 'rehype-katex';
 import config from './src/site.config.ts';
 export default defineConfig({
   site: 'https://paul-marcin.github.io', output: 'static',
+  i18n: { defaultLocale: 'fr', locales: ['fr', 'en'], routing: { prefixDefaultLocale: false } },
   integrations: [mdx(), sitemap(), Pure(config)],
   markdown: { remarkPlugins: [remarkMath], rehypePlugins: [rehypeKatex], shikiConfig: { themes: { light: 'github-light', dark: 'github-dark' } } },
   fonts: [

@@ -2,6 +2,8 @@
 import config from 'virtual:config'
 
 import { Icon } from '../user'
+import { localeFromPath, choose, localPath } from '@/utils/i18n'
+const locale = localeFromPath(Astro.url.pathname)
 
 const footerConf = config.footer
 const social = footerConf.social || []
@@ -61,7 +63,7 @@ const footerLink1 = footerConf.links?.filter(({ pos }) => pos === 1) || []
               <a href='https://github.com/cworld1/astro-theme-pure' target='_blank'>
                 Pure
               </a>
-              theme powered
+              {choose(locale, '— les outils du site', 'theme powered')}
             </span>
           )
         }
@@ -71,8 +73,8 @@ const footerLink1 = footerConf.links?.filter(({ pos }) => pos === 1) || []
       <div class='flex items-center gap-x-4'>
         {
           social.map(({ label, href, icon }) => (
-            <a {href} rel='me' class='sl-flex'>
-              <span class='sr-only'>{label}</span>
+            <a href={href === '/rss.xml' ? localPath(href, locale) : href} rel='me' class='sl-flex'>
+              <span class='sr-only'>{href === '/rss.xml' ? choose(locale, 'Flux RSS', 'RSS feed') : label}</span>
               <Icon name={icon} />
             </a>
           ))

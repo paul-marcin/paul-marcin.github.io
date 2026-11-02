@@ -1,0 +1,115 @@
+---
+import PageLayout from '@/layouts/BaseLayout.astro'
+import PageIntro from '@/components/home/PageIntro.astro'
+import StoryGrid from '@/components/home/StoryGrid.astro'
+import { postsIn } from '@/utils/categories'
+import { sortMDByDate } from 'astro-pure/server'
+
+import { localizedContent } from '@/utils/content'
+import { localeFromPath, choose, entryPath } from '@/utils/i18n'
+const locale = localeFromPath(Astro.url.pathname)
+const posts = postsIn(sortMDByDate(await localizedContent('blog', locale)), 'recherche')
+const projects = sortMDByDate(await localizedContent('projects', locale))
+---
+
+<PageLayout meta={{ title: choose(locale, 'Recherche', 'Research'), description: choose(locale, 'Sciences cognitives computationnelles, intelligence artificielle et modèles de l’humeur.', 'Computational cognitive science, artificial intelligence and models of mood.') }}>
+  <main>
+    <PageIntro
+      eyebrow={choose(locale, 'L’espace académique', 'The academic space')}
+      title={choose(locale, 'Recherche', 'Research')}
+      links={[
+        { label: choose(locale, 'Intérêts', 'Interests'), href: '#interets' },
+        { label: choose(locale, 'Articles', 'Articles'), href: '#articles' },
+        { label: choose(locale, 'Publications', 'Publications'), href: '#publications' },
+        { label: choose(locale, 'Travaux en cours', 'Work in progress'), href: '#travaux' },
+        { label: choose(locale, 'CV', 'CV'), href: '#cv' }
+      ]}
+    >
+      <p>{choose(locale, 'Sciences cognitives computationnelles, intelligence artificielle et modèles de l’humeur.', 'Computational cognitive science, artificial intelligence and models of mood.')}</p>
+    </PageIntro>
+
+    <div id='content' class='animate'>
+      <section class='academic-section' id='interets'>
+        <h2>{choose(locale, 'Intérêts de recherche', 'Research interests')}</h2>
+        <p>{choose(locale, 'Psychiatrie, cognition et modélisation de l’humeur.', 'Psychiatry, cognition and modelling mood.')}</p>
+        <p class='to-do'>{choose(locale, 'À compléter : questions de recherche précises.', 'To be added: specific research questions.')}</p>
+      </section>
+
+      <section class='academic-section' id='articles'>
+        <h2>{choose(locale, 'Articles de recherche', 'Research articles')}</h2>
+        <StoryGrid {posts} />
+      </section>
+
+      <section class='academic-section' id='publications'>
+        <h2>{choose(locale, 'Publications', 'Publications')}</h2>
+        <p class='to-do'>{choose(locale, 'À compléter à partir de ta liste de publications.', 'To be completed with the publication list.')}</p>
+      </section>
+
+      <section class='academic-section' id='travaux'>
+        <h2>{choose(locale, 'Travaux en cours', 'Work in progress')}</h2>
+        {
+          projects.length > 0 ? (
+            <ul class='projects'>
+              {projects.map((project) => (
+                <li>
+                  <h3>
+                    <a href={entryPath('projects', project.id, locale)}>{project.data.title} →</a>
+                  </h3>
+                  <p>{project.data.description}</p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class='to-do'>{choose(locale, 'Aucun projet présenté pour l’instant.', 'No projects presented yet.')}</p>
+          )
+        }
+      </section>
+
+      <section class='academic-section' id='cv'>
+        <h2>{choose(locale, 'CV', 'CV')}</h2>
+        <p class='to-do'>{choose(locale, 'À compléter : parcours et CV à télécharger.', 'To be added: background and downloadable CV.')}</p>
+      </section>
+    </div>
+  </main>
+</PageLayout>
+
+<style>
+  .academic-section {
+    border-top: 1px solid hsl(var(--border));
+    padding: 1.3rem 0 2.5rem;
+    scroll-margin-top: 6rem;
+  }
+  h2 {
+    font-size: 1.45rem;
+    font-weight: 400;
+    margin: 0 0 1.2rem;
+  }
+  .academic-section > p {
+    max-width: 70ch;
+    line-height: 1.6;
+    margin: 0 0 0.5rem;
+  }
+  .projects {
+    display: grid;
+    gap: 1.5rem;
+    max-width: 70ch;
+  }
+  .projects h3 {
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin: 0 0 0.4rem;
+  }
+  .projects h3 a:hover {
+    color: hsl(var(--primary));
+  }
+  .projects p {
+    color: hsl(var(--muted-foreground));
+    line-height: 1.5;
+    margin: 0;
+  }
+  .to-do {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: hsl(var(--muted-foreground));
+  }
+</style>

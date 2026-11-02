@@ -1,0 +1,55 @@
+---
+import PageLayout from '@/layouts/BaseLayout.astro'
+import PageIntro from '@/components/home/PageIntro.astro'
+import StoryGrid from '@/components/home/StoryGrid.astro'
+import { categoryLabels, postsIn } from '@/utils/categories'
+import { sortMDByDate } from 'astro-pure/server'
+
+import { localizedContent } from '@/utils/content'
+import { localeFromPath, choose } from '@/utils/i18n'
+const locale = localeFromPath(Astro.url.pathname)
+const posts = sortMDByDate(await localizedContent('blog', locale))
+---
+
+<PageLayout meta={{ title: 'Essays', description: choose(locale, 'Réflexions sur la psychiatrie, la politique et nos relations.', 'Reflections on psychiatry, politics and our relationships.') }}>
+  <main>
+    <PageIntro
+      eyebrow={choose(locale, 'L’espace des réflexions personnelles', 'A space for personal reflections')}
+      title='Essays'
+      navLabel={choose(locale, 'Thèmes des essais', 'Essay topics')}
+      links={[
+        { label: choose(locale, 'Psychiatrie', 'Psychiatry'), href: '#psychiatrie' },
+        { label: choose(locale, 'Politique et relations', 'Politics and relationships'), href: '#politique' }
+      ]}
+    >
+      <p>
+        {choose(locale, 'Psychiatrie, politique et relations : des textes aboutis pour partager des réflexions et ouvrir la discussion.', 'Psychiatry, politics and relationships: considered essays to share reflections and open up discussion.')}
+      </p>
+    </PageIntro>
+
+    <div id='content' class='animate'>
+      <section class='essay-section' id='psychiatrie' aria-labelledby='psychiatrie-title'>
+        <h2 id='psychiatrie-title'>{categoryLabels('psychiatrie', locale).title}</h2>
+        <StoryGrid posts={postsIn(posts, 'psychiatrie')} />
+      </section>
+      <section class='essay-section' id='politique' aria-labelledby='politique-title'>
+        <h2 id='politique-title'>{choose(locale, 'Réflexions politiques et relationnelles', 'Reflections on politics and relationships')}</h2>
+        <StoryGrid posts={postsIn(posts, 'politique')} />
+      </section>
+    </div>
+  </main>
+</PageLayout>
+
+<style>
+  .essay-section {
+    margin-bottom: 3.5rem;
+    scroll-margin-top: 6rem;
+  }
+  h2 {
+    font-size: 1.45rem;
+    font-weight: 400;
+    border-top: 1px solid hsl(var(--border));
+    padding-top: 1.3rem;
+    margin: 0 0 1.6rem;
+  }
+</style>

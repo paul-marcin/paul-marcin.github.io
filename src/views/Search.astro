@@ -1,0 +1,9 @@
+---
+import PageLayout from '@/layouts/BaseLayout.astro';
+import { localeFromPath, choose } from '@/utils/i18n';
+const locale = localeFromPath(Astro.url.pathname);
+import { PFSearch } from 'astro-pure/components/pages';
+---
+<PageLayout meta={{ title: choose(locale, 'Recherche dans les textes', 'Search the articles') }}>
+  <main><h1 class="text-3xl font-medium">{choose(locale, 'Rechercher un texte', 'Search for an article')}</h1><PFSearch /></main>
+</PageLayout>

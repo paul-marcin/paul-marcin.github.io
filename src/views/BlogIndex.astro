@@ -1,0 +1,14 @@
+---
+import PageLayout from '@/layouts/BaseLayout.astro';
+import { PostPreview } from 'astro-pure/components/pages';
+import { sortMDByDate } from 'astro-pure/server';
+import { localizedContent } from '@/utils/content';
+import { localeFromPath, choose } from '@/utils/i18n';
+const locale = localeFromPath(Astro.url.pathname);
+const posts = sortMDByDate(await localizedContent('blog', locale));
+---
+<PageLayout meta={{ title: 'Articles' }}>
+  <main><h1 class="mb-4 text-3xl font-medium">Articles</h1><p class="mb-8 text-muted-foreground">{choose(locale, 'Textes d’exemple conservés pendant l’intégration de Pure.', 'Example texts preserved during the Pure integration.')}</p>
+    <ul class="flex flex-col gap-y-5">{posts.map(post => <PostPreview post={post} detailed />)}</ul>
+  </main>
+</PageLayout>

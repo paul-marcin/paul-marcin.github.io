@@ -2,10 +2,14 @@
 import { Font } from 'astro:assets';
 import type { SiteMeta } from 'astro-pure/types';
 import config from 'virtual:config';
+import { languageLinks } from '@/utils/content';
+import { localeFromPath, localPath, choose } from '@/utils/i18n';
 type Props = SiteMeta;
 const { title, description = config.description, ogImage, articleDate } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const fullTitle = `${title} · ${config.title}`;
+const locale = localeFromPath(Astro.url.pathname);
+const alternates = await languageLinks(Astro.url.pathname);
 ---
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,7 +19,8 @@ const fullTitle = `${title} · ${config.title}`;
 <link rel="canonical" href={canonical} />
 <link rel="icon" href={config.favicon.href} type={config.favicon.type} />
 <link rel="sitemap" href="/sitemap-index.xml" />
-<link rel="alternate" type="application/rss+xml" title="Flux RSS" href="/rss.xml" />
+<link rel="alternate" type="application/rss+xml" title={choose(locale, 'Flux RSS', 'RSS feed')} href={localPath('/rss.xml', locale)} />
+{alternates.map(({ locale, href }) => <link rel="alternate" hreflang={locale} href={new URL(href, Astro.site)} />)}
 <Font cssVariable="--font-literata" preload={[{ subset: 'latin', style: 'normal' }]} />
 <Font cssVariable="--font-fraunces" />
 <meta property="og:title" content={fullTitle} />
@@ -23,5 +28,5 @@ const fullTitle = `${title} · ${config.title}`;
 <meta property="og:url" content={canonical} />
 <meta property="og:type" content={articleDate ? 'article' : 'website'} />
 <meta property="og:image" content={new URL(ogImage || config.socialCard, Astro.site)} />
-<meta property="og:locale" content={config.locale.attrs} />
+<meta property="og:locale" content={locale === 'en' ? 'en_GB' : 'fr_FR'} />
 <meta name="color-scheme" content="light dark" />
